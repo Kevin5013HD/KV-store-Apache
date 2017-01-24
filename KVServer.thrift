@@ -33,7 +33,7 @@ service KVInterface{
 
 }
 
-struct KVServer{
+struct KVCollection{
 
   1:list<KVMessage> elements
 

@@ -46,7 +46,7 @@ class KVException < ::Thrift::Exception
   ::Thrift::Struct.generate_accessors self
 end
 
-class KVServer
+class KVCollection
   include ::Thrift::Struct, ::Thrift::Struct_Union
   ELEMENTS = 1
 

@@ -162,7 +162,7 @@ class KVException(TException):
   def __ne__(self, other):
     return not (self == other)
 
-class KVServer:
+class KVCollection:
   """
   Attributes:
    - elements
@@ -205,7 +205,7 @@ class KVServer:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('KVServer')
+    oprot.writeStructBegin('KVCollection')
     if self.elements is not None:
       oprot.writeFieldBegin('elements', TType.LIST, 1)
       oprot.writeListBegin(TType.STRUCT, len(self.elements))

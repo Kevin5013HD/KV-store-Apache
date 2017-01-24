@@ -1,11 +1,11 @@
 import glob
 import sys
 
-sys.path.append('gen-py')
+sys.path.insert(0,'gen-py')
 sys.path.insert(0,glob.glob('thrift/lib/py/build/lib*')[0])
 
 from KVServer import KVInterface
-from KVServer.ttypes import KVMessage, KVException, KVServer
+from KVServer.ttypes import KVMessage, KVException, KVCollection
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -15,7 +15,7 @@ from thrift.server import TServer
 
 class KVServerHandler:
     def __init__(self):
-        self.collection = KVServer([])
+        self.collection = KVCollection([])
 
     def ping(self):
         print('ping()')
@@ -38,19 +38,3 @@ class KVServerHandler:
             value = element.value.keys()[0]
             key_list.append(value)
         return key_list
-
-
-
-if __name__ == '__main__':
-    handler = KVServerHandler()
-    processor = KVInterface.Processor(handler)
-    transport = TSocket.TServerSocket(port=8000)
-    tfactory = TTransport.TBufferedTransportFactory()
-
-    pfactory = TBinaryProtocol.TBinaryProtocolFactory()
-
-    server = TServer.TSimpleServer(processor, transport, tfactory, pfactory)
-
-    print('Starting the server...')
-    server.serve()
-    print('done.')
