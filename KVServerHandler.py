@@ -37,11 +37,12 @@ class KVServerHandler:
         return new_element
 
     def get_element(self,key):
-        for kvmessage in self.collection.elements:
-            if kvmessage.value.has_key(key):
-                return kvmessage.value.get(key)
-            else:
-                raise KVException("Element not found :(")
+        try:
+            for kvmessage in self.collection.elements:
+                if kvmessage.value.has_key(key):
+                    return kvmessage.value.get(key)
+        except Except:
+            raise KVException(why="Element not found :(")
 
     def list_elements(self):
         key_list = []
