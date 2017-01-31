@@ -27,7 +27,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('  void ping()')
   print('  KVMessage set_element(string key, string value)')
   print('  bool del_element(string key)')
-  print('  bool get_element(KVMessage element)')
+  print('  string get_element(string key)')
   print('   list_elements()')
   print('')
   sys.exit(0)
@@ -107,7 +107,7 @@ elif cmd == 'get_element':
   if len(args) != 1:
     print('get_element requires 1 args')
     sys.exit(1)
-  pp.pprint(client.get_element(eval(args[0]),))
+  pp.pprint(client.get_element(args[0],))
 
 elif cmd == 'list_elements':
   if len(args) != 0:

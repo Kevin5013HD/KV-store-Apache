@@ -71,8 +71,36 @@ class KVClientHandler():
         print("Exit Client, Good Bye")
         sys.exit(0)
 
+    def help(self):
+        print('')
+        print('Usage {}'.format(self.__label))
+        print('')
+        print('Functions')
+        print('help : List the commands support by the client')
+        print('ping : Make a ping to server')
+        print('get <key> [OPTIONS] : Returns the value associated with that key')
+        print('set <key, value> : Store the key with the associated value ')
+        print('del <key> : Delete the key with the associated value')
+        print('list [OPTIONS] : Returns the list of all stored keys. NO returns the values associated with those keys.')
+        print('exit: Terminates the connection to the server and terminates client execution.')
+        print('[OPTIONS]:')
+        print('\t --xml: returns the data in xml format')
+        print('\t --json: returns the data in json format')
+        print('\t --yml: returns the data in yaml format')
+        print('')
 
-# client.ping()
+    def list(self):
+        return self.client.list_elements()
+
+    def set(self, key, value):
+        # validate here
+        self.client.set_element(key = key,value = value)
+
+    def get(self,key):
+        return self.client.get_element(key = key)
+
+    def delete(self,key):
+        return self.client.del_element(key= key)
 #
 # client.set_element('hola','python')
 #

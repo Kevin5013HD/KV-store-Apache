@@ -20,8 +20,15 @@ class KVServerHandler:
     def ping(self):
         print('ping()')
 
-    def del_element(self):
-        pass
+    def del_element(self,key):
+        for kvmessage in self.collection.elements:
+            if kvmessage.value.has_key(key):
+                self.collection.elements.remove(kvmessage)
+                return True
+            else:
+                # raise KVException("Something wrong :(  ")
+                return False
+
 
     def set_element(self, key, value):
         print "key:{},value:{}".format(key,value)
@@ -29,8 +36,12 @@ class KVServerHandler:
         self.collection.elements.append(new_element)
         return new_element
 
-    def get_element(self):
-        pass
+    def get_element(self,key):
+        for kvmessage in self.collection.elements:
+            if kvmessage.value.has_key(key):
+                return kvmessage.value.get(key)
+            else:
+                raise KVException("Element not found :(")
 
     def list_elements(self):
         key_list = []

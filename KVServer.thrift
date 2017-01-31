@@ -27,7 +27,7 @@ service KVInterface{
 
   bool del_element(1:string key) throws (1: KVException error),
 
-  bool get_element(1:KVMessage element) throws (1:KVException error),
+  string get_element(1:string key) throws (1:KVException error),
 
   list<string> list_elements();
 
@@ -38,3 +38,7 @@ struct KVCollection{
   1:list<KVMessage> elements
 
 }
+
+// typedef map<string,string> KVMessage;
+//
+// typedef list<KVMessage> KVCollection

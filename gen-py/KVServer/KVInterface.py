@@ -37,10 +37,10 @@ class Iface:
     """
     pass
 
-  def get_element(self, element):
+  def get_element(self, key):
     """
     Parameters:
-     - element
+     - key
     """
     pass
 
@@ -147,18 +147,18 @@ class Client(Iface):
       raise result.error
     raise TApplicationException(TApplicationException.MISSING_RESULT, "del_element failed: unknown result")
 
-  def get_element(self, element):
+  def get_element(self, key):
     """
     Parameters:
-     - element
+     - key
     """
-    self.send_get_element(element)
+    self.send_get_element(key)
     return self.recv_get_element()
 
-  def send_get_element(self, element):
+  def send_get_element(self, key):
     self._oprot.writeMessageBegin('get_element', TMessageType.CALL, self._seqid)
     args = get_element_args()
-    args.element = element
+    args.key = key
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
@@ -301,7 +301,7 @@ class Processor(Iface, TProcessor):
     iprot.readMessageEnd()
     result = get_element_result()
     try:
-      result.success = self._handler.get_element(args.element)
+      result.success = self._handler.get_element(args.key)
       msg_type = TMessageType.REPLY
     except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
       raise
@@ -734,16 +734,16 @@ class del_element_result:
 class get_element_args:
   """
   Attributes:
-   - element
+   - key
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'element', (KVMessage, KVMessage.thrift_spec), None, ), # 1
+    (1, TType.STRING, 'key', None, None, ), # 1
   )
 
-  def __init__(self, element=None,):
-    self.element = element
+  def __init__(self, key=None,):
+    self.key = key
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -755,9 +755,8 @@ class get_element_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.element = KVMessage()
-          self.element.read(iprot)
+        if ftype == TType.STRING:
+          self.key = iprot.readString()
         else:
           iprot.skip(ftype)
       else:
@@ -770,9 +769,9 @@ class get_element_args:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('get_element_args')
-    if self.element is not None:
-      oprot.writeFieldBegin('element', TType.STRUCT, 1)
-      self.element.write(oprot)
+    if self.key is not None:
+      oprot.writeFieldBegin('key', TType.STRING, 1)
+      oprot.writeString(self.key)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -783,7 +782,7 @@ class get_element_args:
 
   def __hash__(self):
     value = 17
-    value = (value * 31) ^ hash(self.element)
+    value = (value * 31) ^ hash(self.key)
     return value
 
   def __repr__(self):
@@ -805,7 +804,7 @@ class get_element_result:
   """
 
   thrift_spec = (
-    (0, TType.BOOL, 'success', None, None, ), # 0
+    (0, TType.STRING, 'success', None, None, ), # 0
     (1, TType.STRUCT, 'error', (KVException, KVException.thrift_spec), None, ), # 1
   )
 
@@ -823,8 +822,8 @@ class get_element_result:
       if ftype == TType.STOP:
         break
       if fid == 0:
-        if ftype == TType.BOOL:
-          self.success = iprot.readBool()
+        if ftype == TType.STRING:
+          self.success = iprot.readString()
         else:
           iprot.skip(ftype)
       elif fid == 1:
@@ -844,8 +843,8 @@ class get_element_result:
       return
     oprot.writeStructBegin('get_element_result')
     if self.success is not None:
-      oprot.writeFieldBegin('success', TType.BOOL, 0)
-      oprot.writeBool(self.success)
+      oprot.writeFieldBegin('success', TType.STRING, 0)
+      oprot.writeString(self.success)
       oprot.writeFieldEnd()
     if self.error is not None:
       oprot.writeFieldBegin('error', TType.STRUCT, 1)

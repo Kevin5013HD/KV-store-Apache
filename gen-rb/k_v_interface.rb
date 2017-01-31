@@ -57,13 +57,13 @@ module KVInterface
       raise ::Thrift::ApplicationException.new(::Thrift::ApplicationException::MISSING_RESULT, 'del_element failed: unknown result')
     end
 
-    def get_element(element)
-      send_get_element(element)
+    def get_element(key)
+      send_get_element(key)
       return recv_get_element()
     end
 
-    def send_get_element(element)
-      send_message('get_element', Get_element_args, :element => element)
+    def send_get_element(key)
+      send_message('get_element', Get_element_args, :key => key)
     end
 
     def recv_get_element()
@@ -126,7 +126,7 @@ module KVInterface
       args = read_args(iprot, Get_element_args)
       result = Get_element_result.new()
       begin
-        result.success = @handler.get_element(args.element)
+        result.success = @handler.get_element(args.key)
       rescue ::KVException => error
         result.error = error
       end
@@ -246,10 +246,10 @@ module KVInterface
 
   class Get_element_args
     include ::Thrift::Struct, ::Thrift::Struct_Union
-    ELEMENT = 1
+    KEY = 1
 
     FIELDS = {
-      ELEMENT => {:type => ::Thrift::Types::STRUCT, :name => 'element', :class => ::KVMessage}
+      KEY => {:type => ::Thrift::Types::STRING, :name => 'key'}
     }
 
     def struct_fields; FIELDS; end
@@ -266,7 +266,7 @@ module KVInterface
     ERROR = 1
 
     FIELDS = {
-      SUCCESS => {:type => ::Thrift::Types::BOOL, :name => 'success'},
+      SUCCESS => {:type => ::Thrift::Types::STRING, :name => 'success'},
       ERROR => {:type => ::Thrift::Types::STRUCT, :name => 'error', :class => ::KVException}
     }
 
