@@ -50,15 +50,14 @@ class KVClient():
                 raise KVUserInputException("Missing arguments, needs the key for the element to get")
             elif len(input_elements) == 2:
                 value = self.client_handler.get(input_elements[1])
-                print ""
-                print ("Key {} - Value {}".format(input_elements[1],value))
+                print ("key:{}, value:{}".format(input_elements[1],value))
             elif len(input_elements) == 3:
                 if input_elements[2] == '--xml':
                     pass
                 elif input_elements[2] == '--json':
-                    pass
+                    print self.client_handler.get_json(input_elements[1])
                 elif input_elements[2] == '--yml':
-                    pass
+                    print self.client_handler.get_yaml(input_elements[1])
                 else:
                     raise KVUserInputException("Sorry invalid option, --xml --json --yml are valid options")
             else:
@@ -79,9 +78,9 @@ class KVClient():
                 if input_elements[1] == '--xml':
                     pass
                 elif input_elements[1] == '--json':
-                    pass
+                    print self.client_handler.list_json()
                 elif input_elements[1] == '--yml':
-                    pass
+                    print self.client_handler.list_yaml()
                 else:
                     raise KVUserInputException("Sorry invalid option, --xml --json --yml are valid options")
             else:
@@ -118,6 +117,8 @@ if __name__ == '__main__':
                 operation  = Client.expr(text)
             except KVUserInputException as kvue:
                 print("ERROR: {}".format(kvue.message))
+            except KVException as kve:
+                print("ERROR: {}".format(kve.why))
     except Thrift.TException as tx:
         print("Error: Invalid Port or Host, please try again with the correct port or host\n{}".format(tx.message))
         sys.exit(0)
