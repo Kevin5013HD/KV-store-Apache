@@ -1,6 +1,8 @@
 import glob
 import sys
 import socket
+import json
+import yaml
 
 sys.path.insert(0,'gen-py')
 sys.path.insert(0,glob.glob('thrift/lib/py/build/lib*')[0])
@@ -92,6 +94,17 @@ class KVClientHandler():
     def list(self):
         return self.client.list_elements()
 
+    def list_xml(self):
+        pass
+
+    def list_json(self):
+        elements = self.client.list_elements()
+        return json.dumps({'keys':elements})
+
+    def list_yaml(self):
+        elements = self.client.list_elements()
+        return yaml.dump({'keys': elements}, default_flow_style=False)
+
     def set(self, key, value):
         # validate here
         self.client.set_element(key = key,value = value)
@@ -99,9 +112,17 @@ class KVClientHandler():
     def get(self,key):
         return self.client.get_element(key = key)
 
+    def get_xml(self,key):
+        value = self.client.get_element(key= key)
+        pass
+
+    def get_json(self,key):
+        value = self.client.get_element(key= key)
+        return json.dumps({'KVMessage':{'value':value,'key':key}})
+
+    def get_yaml(self,key):
+        value = self.client.get_element(key= key)
+        return yaml.dump({'KVMessage':{'key':key,'value':value}}, default_flow_style=False)
+
     def delete(self,key):
         return self.client.del_element(key= key)
-#
-# client.set_element('hola','python')
-#
-# client.list_elements()
