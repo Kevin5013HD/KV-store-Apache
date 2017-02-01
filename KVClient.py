@@ -20,6 +20,20 @@ class KVClient():
     TTransport transport = new TSocket("localhost", port)
     client_handler = None
 
+    TProtocol protocol = new TbinaryProtocol(transport);
+
+    def start(Integer port):
+        TServerSocket serverTransport = new TServerSocket(port);
+        MathematicsService.Processor processor =
+             new MathematicsService.Processor(
+                new ArithmeticServiceImpl());
+
+        TServer server = new TThreadPoolServer(
+            new TThreadPoolServer.Args(serverTransport).processor(processor));
+        System.out.println("Starting server ...");
+        server.serve();
+    }
+
     def connect(self):
         self.client_handler = KVClientHandler()
         if len(sys.argv) == 1:

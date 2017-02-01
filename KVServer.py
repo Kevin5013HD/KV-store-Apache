@@ -16,6 +16,10 @@ from thrift.server import TServer
 class KVServer():
     __label = "Single Server Key-Value Store"
     __port = 9000
+    port = 9091;
+    TServerSocket serverTransport = new TServerSocket(port);
+
+    
 
     def input_port(self,port):
         if port.isdigit() == True:
