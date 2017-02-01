@@ -3,7 +3,7 @@ import glob
 import sys
 
 sys.path.insert(0,'gen-py')
-sys.path.insert(0,glob.glob('thrift/lib/py/build/lib*')[0])
+sys.path.insert(0,glob.glob('/home/kevin/Descargas/thrift/lib/py/build/lib*')[0])
 
 from KVUserInputException import KVUserInputException
 from KVServerHandler import KVServerHandler
@@ -13,9 +13,15 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 from thrift.server import TServer
 
+
+
 class KVServer():
     __label = "Single Server Key-Value Store"
     __port = 9000
+    port = 9091;
+    serverTransport = TSocket.TServerSocket(port);
+
+
 
     def input_port(self,port):
         if port.isdigit() == True:

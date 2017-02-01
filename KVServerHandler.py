@@ -2,7 +2,7 @@ import glob
 import sys
 
 sys.path.insert(0,'gen-py')
-sys.path.insert(0,glob.glob('thrift/lib/py/build/lib*')[0])
+sys.path.insert(0,glob.glob('/home/kevin/Descargas/thrift/lib/py/build/lib*')[0])
 
 from KVServer import KVInterface
 from KVServer.ttypes import KVMessage, KVException, KVCollection

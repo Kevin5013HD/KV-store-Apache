@@ -3,7 +3,7 @@ import sys
 import shlex
 
 sys.path.insert(0,'gen-py')
-sys.path.insert(0,glob.glob('thrift/lib/py/build/lib*')[0])
+sys.path.insert(0,glob.glob('/home/kevin/Descargas/thrift/lib/py/build/lib*')[0])
 
 from KVServer import KVInterface
 from KVServer.ttypes import KVMessage, KVException
@@ -16,6 +16,8 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 class KVClient():
+    port = 9091;
+
     client_handler = None
 
     def connect(self):
