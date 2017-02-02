@@ -3,9 +3,13 @@ import sys
 import socket
 import json
 import yaml
+from xml.etree.ElementTree import Element, SubElement
+from xml.etree import ElementTree
+from xml.dom import minidom
+
 
 sys.path.insert(0,'gen-py')
-sys.path.insert(0,glob.glob('../thrift/lib/py/build/lib*')[0])
+#sys.path.insert(0,glob.glob('../thrift/lib/py/build/lib*')[0])
 
 
 from KVServer import KVInterface
@@ -94,6 +98,25 @@ class KVClientHandler():
     def list(self):
         return self.client.list_elements()
 
+    def list_xml(self):
+            keys = Element('keys')
+            elements = self.client.list_elements()
+            for element in elements:
+                child = SubElement(keys,'key')
+                child.text = element
+            rough_string = ElementTree.tostring(keys, 'utf-8')
+            reparsed = minidom.parseString(rough_string)
+            return reparsed.toprettyxml(indent="  ")
+
+
+    def list_json(self):
+        elements = self.client.list_elements()
+        return json.dumps({'keys':elements})
+
+    def list_yaml(self):
+        elements = self.client.list_elements()
+        return yaml.dump({'keys': elements}, default_flow_style=False)
+
     def set(self, key, value):
         # validate here
         self.client.set_element(key = key,value = value)
@@ -101,8 +124,31 @@ class KVClientHandler():
     def get(self,key):
         return self.client.get_element(key = key)
 
+    def get_xml(self,key):
+        value = self.client.get_element(key= key)
+        kvmessage = Element('KVMessage')
+        keyxml = SubElement(kvmessage,'key')
+        keyxml.text= key
+        valuexml = SubElement(kvmessage,'value')
+        valuexml.text= value
+        rough_string = ElementTree.tostring(kvmessage, 'utf-8')
+        reparsed = minidom.parseString(rough_string)
+        return reparsed.toprettyxml(indent="  ")
+
+    def get_json(self,key):
+        value = self.client.get_element(key= key)
+        return json.dumps({'KVMessage':{'value':value,'key':key}})
+
+    def get_yaml(self,key):
+        value = self.client.get_element(key= key)
+        return yaml.dump({'KVMessage':{'key':key,'value':value}}, default_flow_style=False)
+
     def delete(self,key):
-        return self.client.del_element(key= key)
+        try:
+            return self.client.del_element(key= key)
+        except:
+            raise KVException(why="Element doen'ts exist")
+
 #
 # client.set_element('hola','python')
 #
