@@ -35,23 +35,38 @@ class KVServerHandler:
 
 
     def set_element(self, key, value):
-        print "key:{},value:{}".format(key,value)
-        new_element = KVMessage({key:value})
-        self.collection.elements.append(new_element)
-        return new_element
+        try:
+            new_element = KVMessage({key:value})
+            for kvmessage in self.collection.elements:
+                if kvmessage.value.has_key(key):
+                    raise KVException(why="Element doesn't create, Key already exists")
+            self.collection.elements.append(new_element)
+            print("SET - New element created Key:{},Value:{}".format(key,value))
+            return new_element
+        except KVException:
+            raise KVException(why="Element doesn't create, Key already exists")
+        except Exception:
+            raise KVException(why="Something wrong, Element doesn't create")
 
     def get_element(self,key):
         try:
             for kvmessage in self.collection.elements:
                 if kvmessage.value.has_key(key):
-                    return kvmessage.value.get(key)
-        except Except:
-            raise KVException(why="Element not found :(")
-
+                    value = kvmessage.value.get(key)
+            if value:
+                print("GET - Get element Key:{},Value:{}".format(key,value))
+                return value
+            else:
+                raise KVException(why="Something wrong, Element doesn't exist")
+        except KVException:
+            raise KVException(why="Something wrong, Element doesn't exist")
+        except:
+            raise KVException(why="Something wrong, Element not found :(")
 
     def list_elements(self):
         key_list = []
         for element in self.collection.elements:
             value = element.value.keys()[0]
             key_list.append(value)
+        print("LIST - List Elements")
         return key_list
