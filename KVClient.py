@@ -3,7 +3,7 @@ import sys
 import shlex
 
 sys.path.insert(0,'gen-py')
-sys.path.insert(0,glob.glob('/home/kevin/Descargas/thrift/lib/py/build/lib*')[0])
+#sys.path.insert(0,glob.glob('../thrift/lib/py/build/lib*')[0])
 
 from KVServer import KVInterface
 from KVServer.ttypes import KVMessage, KVException
@@ -16,7 +16,6 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 class KVClient():
-    port = 9091;
 
     client_handler = None
 
@@ -120,6 +119,8 @@ if __name__ == '__main__':
                 operation  = Client.expr(text)
             except KVUserInputException as kvue:
                 print("ERROR: {}".format(kvue.message))
+            except KVException as kve:
+                print("ERROR: {}".format(kve.why))
     except Thrift.TException as tx:
-        print("Error: Invalid Port or Host, please try again with the correct port or host\n{}".format(tx.message))
+        print("Error: {}".format(tx.message))
         sys.exit(0)

@@ -2,7 +2,7 @@ import glob
 import sys
 
 sys.path.insert(0,'gen-py')
-sys.path.insert(0,glob.glob('/home/kevin/Descargas/thrift/lib/py/build/lib*')[0])
+#sys.path.insert(0,glob.glob('../thrift/lib/py/build/lib*')[0])
 
 from KVServer import KVInterface
 from KVServer.ttypes import KVMessage, KVException, KVCollection
@@ -24,11 +24,14 @@ class KVServerHandler:
 	try:
             for kvmessage in self.collection.elements:
                 if kvmessage.value.has_key(key):
+                    value = kvmessage.value.get(key)
                     self.collection.elements.remove(kvmessage)
+                    print("DEL - Element deleted Key:{},Value:{}".format(key,value))
                     return True
         except Except:
-            # raise KVException("Something wrong :(  ")
             return False
+            raise KVException(why="Something wrong, Element not found :(")
+
 
 
     def set_element(self, key, value):
