@@ -3,7 +3,8 @@ import glob
 import sys
 
 sys.path.insert(0,'gen-py')
-sys.path.insert(0,glob.glob('../thrift/lib/py/build/lib*')[0])
+#sys.path.insert(0,glob.glob('../
+#thrift/lib/py/build/lib*')[0])
 
 from KVUserInputException import KVUserInputException
 from KVServerHandler import KVServerHandler
@@ -41,16 +42,27 @@ class KVServer():
 
         handler = KVServerHandler()
         processor = KVInterface.Processor(handler)
-        transport = TSocket.TServerSocket(port=self.__port)
+        self.transport = TSocket.TServerSocket(port=self.__port)
         tfactory = TTransport.TBufferedTransportFactory()
         pfactory = TBinaryProtocol.TBinaryProtocolFactory()
 
-        server = TServer.TThreadPoolServer(processor, transport, tfactory, pfactory)
+        self.server = TServer.TThreadPoolServer(processor, self.transport, tfactory, pfactory)
+        self.server.setNumThreads(2)
         print('Starting the server...')
-        server.serve()
+        self.server.serve()
+
+    def stop(self):
+        self.transport.close()
         print('done.')
 
 
 
 if __name__ == '__main__':
-    KVServer().serve()
+    server =  KVServer()
+    try:
+        server.serve()
+    except KeyboardInterrupt:
+        print("Exit")
+    finally:
+        server.stop()
+        sys.exit(0)
