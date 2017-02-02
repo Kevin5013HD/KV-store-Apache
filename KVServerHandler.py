@@ -21,13 +21,14 @@ class KVServerHandler:
         print('ping()')
 
     def del_element(self,key):
-        for kvmessage in self.collection.elements:
-            if kvmessage.value.has_key(key):
-                self.collection.elements.remove(kvmessage)
-                return True
-            else:
-                # raise KVException("Something wrong :(  ")
-                return False
+	try:
+            for kvmessage in self.collection.elements:
+                if kvmessage.value.has_key(key):
+                    self.collection.elements.remove(kvmessage)
+                    return True
+        except Except:
+            # raise KVException("Something wrong :(  ")
+            return False
 
 
     def set_element(self, key, value):
